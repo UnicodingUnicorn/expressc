@@ -18,8 +18,8 @@ struct Request{
 	char body[500];
 };
 
-struct Callback get_callbacks[N];
-static unsigned int nget;
+struct Callback get_callbacks[10];
+unsigned int nget = 0;
 
 //Initialised the thing. For stuff like 0-ing arrays
 void expressc_server_initialise(){
@@ -37,7 +37,7 @@ static void error(char *msg){
 void expressc_add_get_handler(char *address, void (*func)(struct Request *)){
 	struct Callback callback;
 	strcpy(callback.address, address);
-	callback.func_pointer = &func;
+	callback.func_pointer = func;
 	get_callbacks[nget] = callback;
 	nget++;
 }
