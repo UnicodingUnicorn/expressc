@@ -1,0 +1,10 @@
+all: server_test
+
+server_test: server_test.o expressc.o
+	gcc server_test.o expressc.o -o server_test
+
+server_test.o: server_test.c
+	gcc server_test.c -c
+
+expressc.o : expressc.c
+	gcc expressc.c -c

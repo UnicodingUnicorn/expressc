@@ -12,7 +12,7 @@
 
 #define BUFFER_SIZE 10196
 #define CHUNK_SIZE 512
-#define N 100000000
+#define N 1000
 
 struct Callback;
 struct Header;
@@ -20,7 +20,7 @@ struct Request;
 
 void expressc_server_initialise();
 static void error(char *);
-void expressc_add_get_handler(char *, void (*)());
+void expressc_add_get_handler(char *, void (*)(struct Request *));
 int expressc_send(struct Request, char *);
 int expressc_send_file(struct Request, char *);
 static void process_request(int);

@@ -2,7 +2,7 @@
 
 struct Callback{
 	char *address;
-	void *func_pointer;
+	void (*func_pointer)(struct Request *);
 };
 
 struct Header{
@@ -34,7 +34,7 @@ static void error(char *msg){
 }
 
 //Adds a function pointer to 
-void expressc_add_get_handler(char *address, void (*func)(struct Request *){
+void expressc_add_get_handler(char *address, void (*func)(struct Request *)){
 	struct Callback callback;
 	strcpy(callback.address, address);
 	callback.func_pointer = &func;
@@ -122,15 +122,16 @@ static void process_request(int sockfd){
 		j = 0;
 		for(i = 0; i < nget; i++){
 			if(strcmp(get_callbacks[i].address, request.address) == 0){
-				relevant[j] = get_callbacks[i];
-				j++;
+				//relevant[j] = get_callbacks[i];
+				//j++;
+				get_callbacks[i].func_pointer(&request);
 			}
 		}
-		for(i = 0; i < j; i++){
+		/*for(i = 0; i < j; i++){
 			//relevant[j].func_pointer(&request);
-			void *func = relevant[j].func_pointer;
+			void *func = &relevant[j].func_pointer;
 			func(&request);
-		}
+		}*/
 	}
 }
 
