@@ -1,7 +1,7 @@
 #include "expressc.h"
 
 struct Callback{
-	char *address;
+	char address[100];
 	void (*func_pointer)(struct Request *);
 };
 
@@ -34,7 +34,7 @@ static void error(char *msg){
 }
 
 //Adds a function pointer to 
-void expressc_add_get_handler(char *address, void (*func)(struct Request *)){
+void expressc_add_get_handler(char address[], void (*func)(struct Request *)){
 	struct Callback callback;
 	strcpy(callback.address, address);
 	callback.func_pointer = func;
