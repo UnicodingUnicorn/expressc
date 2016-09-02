@@ -27,6 +27,8 @@ unsigned int npost = 0;
 void expressc_server_initialise(){
 	bzero(get_callbacks, sizeof(get_callbacks));
 	nget = 0;
+	bzero(get_callbacks, sizeof(post_callbacks));
+	npost = 0;
 }
 
 //Prints error and exits
