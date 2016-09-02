@@ -18,8 +18,10 @@ struct Request{
 	char body[500];
 };
 
-struct Callback get_callbacks[10];
+struct Callback get_callbacks[N];
 unsigned int nget = 0;
+struct Callback post_callbacks[N];
+unsigned int npost = 0;
 
 //Initialised the thing. For stuff like 0-ing arrays
 void expressc_server_initialise(){
@@ -40,6 +42,15 @@ void expressc_add_get_handler(char address[], void (*func)(struct Request *)){
 	callback.func_pointer = func;
 	get_callbacks[nget] = callback;
 	nget++;
+}
+
+//Adds a function pointer to 
+void expressc_add_post_handler(char address[], void (*func)(struct Request *)){
+	struct Callback callback;
+	strcpy(callback.address, address);
+	callback.func_pointer = func;
+	get_callbacks[npost] = callback;
+	npost++;
 }
 
 int expressc_send(struct Request request, char *message){
@@ -110,28 +121,34 @@ static void process_request(int sockfd){
 	bzero(request.headers, sizeof(request.headers));
 	i = 1;
 	while(!(strcmp(lines[i], "") == 0)){
-		//TODO: Seperate the head and tail, put each into respective variable
+		char line[100];
+		strcpy(line, lines[i]);
+		token = strtok(line, ":");
+		strcpy(request.headers[i].name, token);
+		token = strtok(NULL, ":");
+		strcpy(request.headers[i].data, token);
 		i++;
 	}
 	strcpy(request.body, lines[i+1]);
 	
-	//TODO: Iterate through array of get function pointers and look for address
 	if(strcmp(request.type, "GET") == 0){
 		struct Callback relevant[nget];
 		bzero(relevant, sizeof(relevant));
 		j = 0;
 		for(i = 0; i < nget; i++){
 			if(strcmp(get_callbacks[i].address, request.address) == 0){
-				//relevant[j] = get_callbacks[i];
-				//j++;
 				get_callbacks[i].func_pointer(&request);
 			}
 		}
-		/*for(i = 0; i < j; i++){
-			//relevant[j].func_pointer(&request);
-			void *func = &relevant[j].func_pointer;
-			func(&request);
-		}*/
+	}else if(strcmp(request.type, "POST") == 0){
+		struct Callback relevant[nget];
+		bzero(relevant, sizeof(relevant));
+		j = 0;
+		for(i = 0; i < nget; i++){
+			if(strcmp(post_callbacks[i].address, request.address) == 0){
+				post_callbacks[i].func_pointer(&request);
+			}
+		}
 	}
 }
 

@@ -21,6 +21,7 @@ struct Request;
 void expressc_server_initialise();
 static void error(char *);
 void expressc_add_get_handler(char *, void (*)(struct Request *));
+void expressc_add_post_handler(char *, void (*)(struct Request *));
 int expressc_send(struct Request, char *);
 int expressc_send_file(struct Request, char *);
 static void process_request(int);
