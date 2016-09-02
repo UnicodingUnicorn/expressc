@@ -12,7 +12,7 @@ struct Header{
 
 struct Request{
 	int sockfd;
-	char type[4];
+	char type[8];
 	char address[50];
 	struct Header headers[50];
 	char body[500];
@@ -22,13 +22,21 @@ struct Callback get_callbacks[N];
 unsigned int nget = 0;
 struct Callback post_callbacks[N];
 unsigned int npost = 0;
+struct Callback put_callbacks[N];
+unsigned int nput = 0;
+struct Callback delete_callbacks[N];
+unsigned int ndelete = 0;
 
 //Initialised the thing. For stuff like 0-ing arrays
 void expressc_server_initialise(){
 	bzero(get_callbacks, sizeof(get_callbacks));
 	nget = 0;
-	bzero(get_callbacks, sizeof(post_callbacks));
+	bzero(post_callbacks, sizeof(post_callbacks));
 	npost = 0;
+	bzero(put_callbacks, sizeof(put_callbacks));
+	nput = 0;
+	bzero(delete_callbacks, sizeof(delete_callbacks));
+	ndelete = 0;
 }
 
 //Prints error and exits
@@ -37,7 +45,7 @@ static void error(char *msg){
 	exit(1);
 }
 
-//Adds a function pointer to 
+//Adds a function pointer for GET
 void expressc_add_get_handler(char address[], void (*func)(struct Request *)){
 	struct Callback callback;
 	strcpy(callback.address, address);
@@ -46,13 +54,30 @@ void expressc_add_get_handler(char address[], void (*func)(struct Request *)){
 	nget++;
 }
 
-//Adds a function pointer to 
+//Adds a function pointer for POST
 void expressc_add_post_handler(char address[], void (*func)(struct Request *)){
 	struct Callback callback;
 	strcpy(callback.address, address);
 	callback.func_pointer = func;
-	get_callbacks[npost] = callback;
+	post_callbacks[npost] = callback;
 	npost++;
+}
+//Adds a function pointer for PUT
+void expressc_add_put_handler(char address[], void (*func)(struct Request *)){
+	struct Callback callback;
+	strcpy(callback.address, address);
+	callback.func_pointer = func;
+	put_callbacks[nput] = callback;
+	nput++;
+}
+
+//Adds a function pointer for POST
+void expressc_add_delete_handler(char address[], void (*func)(struct Request *)){
+	struct Callback callback;
+	strcpy(callback.address, address);
+	callback.func_pointer = func;
+	delete_callbacks[ndelete] = callback;
+	ndelete++;
 }
 
 int expressc_send(struct Request request, char *message){
