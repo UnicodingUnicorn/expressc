@@ -1,23 +1,5 @@
 #include "expressc.h"
 
-struct Callback{
-	char address[100];
-	void (*func_pointer)(struct Request *);
-};
-
-struct Header{
-	char name[50];
-	char data[50];
-};
-
-struct Request{
-	int sockfd;
-	char type[8];
-	char address[50];
-	struct Header headers[50];
-	char body[500];
-};
-
 struct Callback get_callbacks[N];
 unsigned int nget = 0;
 struct Callback post_callbacks[N];

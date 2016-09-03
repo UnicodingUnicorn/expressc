@@ -14,9 +14,23 @@
 #define CHUNK_SIZE 512
 #define N 1000
 
-struct Callback;
-struct Header;
-struct Request;
+struct Callback{
+	char address[100];
+	void (*func_pointer)(struct Request *);
+};
+
+struct Header{
+	char name[50];
+	char data[50];
+};
+
+struct Request{
+	int sockfd;
+	char type[8];
+	char address[50];
+	struct Header headers[50];
+	char body[500];
+};
 
 void expressc_server_initialise();
 static void error(char *);
