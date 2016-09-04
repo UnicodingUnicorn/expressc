@@ -12,13 +12,14 @@ int main(){
 	//printf("2\n");
 	expressc_add_get_handler("/", func1);
 	//printf("3\n");
-	expressc_add_get_handler("/", func2);
+	//expressc_add_get_handler("/", func2);
 	//printf("Stuff\n");
 	expressc_server_start(1837);
 	return 0;
 }
 
 void func1(struct Request *request){
+	expressc_send_file(*request, "index.html");
 	printf("Function 1\n");
 }
 void func2(struct Request *request){
